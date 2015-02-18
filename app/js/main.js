@@ -5,6 +5,7 @@
 //    Firebase = require('firebase');
 
 var FIREBASE_URL = 'https://nerd-tree.firebaseio.com',
+    fb = new Firebase(FIREBASE_URL),
     usersFbUrl;
 
 $(document).ready(initialize);
@@ -14,13 +15,30 @@ function initialize () {
   ///////////////// Initial State ////////////////////
   ///////////////////////////////////////////////////
 
-  //when you first come to the page, hide certain things if not logged in
-  //signup form
-  $('.sign-up-form').hide();
-  //signin form
-  $('.sign-in-form').hide();
-  //profile form
-  $('.profile-form').hide();
+  //when you first come to the page, are you logged in?
+  if(fb.getAuth()) {
+    //if true show the things
+    //signup form
+    $('.sign-up-form').hide();
+    //signin form
+    $('.sign-in-form').hide();
+    //hide the signup button
+    $('#signUp').hide();
+    //hide the signin button
+    $('#signIn').hide();
+    //hide brand-land
+    $('.brand-land').hide();
+  } else {
+    //hide these things
+    //signup form
+    $('.sign-up-form').hide();
+    //signin form
+    $('.sign-in-form').hide();
+    //profile form
+    $('.profile-form').hide();
+  }
+
+
 
 
   ////////////////////////////////////////////////////
@@ -37,11 +55,39 @@ function initialize () {
   // $('#cancelSignup').click();
   //
   //signin form
+  $('#loginExistingUser').click(loginExistingUser);
 }//end of initialize
 
 ////////////////////////////////////////////////////
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
+
+//login an existing user
+function loginExistingUser (event) {
+  event.preventDefault();
+  //get the email
+  var $email = $('#signinEmail').val();
+  // and password
+  var $password = $('#signinPassword').val();
+  //create the login object
+  var loginObj = {
+    email: $email,
+    password: $password
+  }
+  //clear the values of the inputs
+  $('#signinEmail').val('');
+  $('#signinPassword').val('');
+
+
+  fb.authWithPassword(loginObj, function(error, authData) {
+    if(error) {
+      console.log("login failed! ", error);
+      alert("login failed! ", error);
+    } else {
+      console.log('authenticated successfully with payload: ', authData);
+    }
+  });
+}
 
 //create a new firebase user
 function createNewUser (event) {
@@ -59,16 +105,16 @@ function createNewUser (event) {
   $('#signupEmail').val('');
   $('#signupPassword').val('');
 
-  var fb = new Firebase(FIREBASE_URL);
   fb.createUser(loginObj, function (error, userData) {
     if (error) {
       console.log("Error creating user: ", error);
       alert("Rejected! ", error);
     } else {
       console.log("Successfully created user account with uid: ", userData.uid);
+      //login
     }
   });
-}
+}//end createNewUser
 
 //show sign in form and hide the brand-land
 function showSignInForm (event) {
@@ -77,7 +123,7 @@ function showSignInForm (event) {
   $('.sign-in-form').toggle();
   //hide brand-land
   $('.brand-land').toggle();
-}
+}//end showSignInForm
 
 //show sign up form and hide the brand-land
 function showSignUpForm (event) {
@@ -86,4 +132,4 @@ function showSignUpForm (event) {
   $('.sign-up-form').toggle();
   //hide brand-land
   $('.brand-land').toggle();
-}
+}//end showSignUpForm
