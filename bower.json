@@ -1,0 +1,22 @@
+{
+  "name": "nerd-tree",
+  "version": "0.0.0",
+  "homepage": "https://github.com/erinpagemd/nerd-tree",
+  "authors": [
+    "YOUR NAME <erinpagemd@yahoo.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.2",
+    "firebase": "~2.2.0",
+    "jquery": "~2.1.3",
+    "lodash": "~3.2.0"
+  }
+}

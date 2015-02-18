@@ -1,0 +1,40 @@
+{
+  "name": "nerd-tree",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "karma": "./node_modules/karma/bin/karma start",
+    "test": "npm run build && npm run karma",
+    "test-once": "npm run build && npm run karma -- --single-run",
+    "deploy": "firebase --email ${FIREBASE_EMAIL} --password ${FIREBASE_PASSWORD} deploy",
+    "build": "./build.sh",
+    "watch": "./watch.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erinpagemd/nerd-tree.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erinpagemd/nerd-tree/issues"
+  },
+  "homepage": "https://github.com/erinpagemd/nerd-tree",
+  "devDependencies": {
+    "chai": "^2.0.0",
+    "codeclimate-test-reporter": "0.0.4",
+    "jade": "^1.9.2",
+    "karma": "^0.12.31",
+    "karma-chai": "^0.1.0",
+    "karma-coverage": "^0.2.7",
+    "karma-coveralls": "^0.1.5",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "mocha": "^2.1.0",
+    "mocha-phantomjs": "^3.5.3",
+    "node-sass": "^2.0.1",
+    "phantomjs": "^1.9.15"
+  }
+}
