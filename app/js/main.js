@@ -6,7 +6,8 @@
 
 var FIREBASE_URL = 'https://nerd-tree.firebaseio.com',
     fb = new Firebase(FIREBASE_URL),
-    usersFbUrl;
+    usersFbUrl,
+    fbUsersData;
 
 $(document).ready(initialize);
 function initialize () {
@@ -28,6 +29,11 @@ function initialize () {
     $('#signIn').hide();
     //hide brand-land
     $('.brand-land').hide();
+
+    fbUsers = new Firebase('https://nerd-tree.firebaseio.com/users/' + fb.getAuth().uid);
+
+    console.log(fb.getAuth().uid);
+
   } else {
     //hide these things
     //signup form
@@ -37,9 +43,6 @@ function initialize () {
     //profile form
     $('.profile-form').hide();
   }
-
-
-
 
   ////////////////////////////////////////////////////
   ///////////////// Click Events /////////////////////
@@ -56,11 +59,36 @@ function initialize () {
   //
   //signin form
   $('#loginExistingUser').click(loginExistingUser);
+
+  //profile form
+  $('#submitProfile').click(submitProfile);
 }//end of initialize
 
 ////////////////////////////////////////////////////
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
+
+//submit profile name and picture url
+function submitProfile (event) {
+  event.preventDefault();
+  //get the name
+  var $name = $('#profileName').val();
+  // and password
+  var $imgUrl = $('#imgUrl').val();
+  //create the login object
+  var profileObj = {
+    name: $name,
+    image: $imgUrl
+  }
+  profileObj = JSON.stringify(profileObj);
+  //clear the values of the inputs
+  $('#profileName').val('');
+  $('#imgUrl').val('');
+
+  //save the data to firebase using set()
+  var fbUsersData = fbUsers.child('data');
+  fbUsersData.set(profileObj);
+}
 
 //login an existing user
 function loginExistingUser (event) {

@@ -68,13 +68,13 @@ html
           h2 Inform the Nerd Tree
           .form-group
             label Name
-            input.form-control(type='text' placeholder='Bob')
+            input.form-control(id='profileName' type='text' placeholder='Bob')
           .form-group
             label Picture URL
-            input.form-control(type='http' placeholder='http://imgur.com/bob')
+            input.form-control(id='imgUrl' type='url' placeholder='http://imgur.com/bob')
           .form-group
             button.btn.btn-default(type='submit' id='submitProfile') Submit         
-            button.btn.btn-default(type='submit' id='cancelProfile') Cancel         
+            button.btn.btn-default(id='cancelProfile') Cancel         
 
     <!-- --END FORMS-- -->
 
