@@ -75,12 +75,13 @@ function submitProfile (event) {
   var $name = $('#profileName').val();
   // and password
   var $imgUrl = $('#imgUrl').val();
+  console.log($imgUrl);
   //create the login object
   var profileObj = {
     name: $name,
     image: $imgUrl
   }
-  profileObj = JSON.stringify(profileObj);
+  //profileObj = JSON.stringify(profileObj);
   //clear the values of the inputs
   $('#profileName').val('');
   $('#imgUrl').val('');
