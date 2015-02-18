@@ -14,11 +14,12 @@ html
         .navbar-header
           a.navbar-brand(href='#')
             img.img-circle(alt='brand' src='../img/nerdtreebrand.png')
+        p.navbar-text Nerd Tree
         form.navbar-form.navbar-right
           .form-group
-            button.btn.btn-default.navbar-btn(type='button') Sign In
-            button.btn.btn-default.navbar-btn(type='button') Sign Up
-
+            button.btn.btn-default.navbar-btn(type='button' id='signIn') Sign In
+            button.btn.btn-default.navbar-btn(type='button' id='signUp') Sign Up
+            button.btn.btn-default.navbar-btn(type='button' id='logout') Logout
     
     //- pretty h1 and tree img
     .brand-land
@@ -28,7 +29,74 @@ html
           //- try to make the image a heart
           img.img-circle(alt='data tree' src='../img/actualtree.png')
     
+    <!-- --FORMS-- -->
+    
+    //- signup form
+    .row
+      .col-md-4.col-md-offset-4
+        form.sign-up-form
+          h2 You have found your nerd tree
+          .form-group
+            label Email Address
+            input.form-control(type='email' placeholder='bob@aol.com')
+          .form-group
+            label Password
+            input.form-control(type='password' placeholder='password1')
+          .form-group
+            button.btn.btn-default(type='submit' id='createNewUser') Submit
+            button.btn.btn-default(type='submit' id='cancelSignup') Cancel
+    
+    //- signin form
+    .row
+      .col-md-4.col-md-offset-4
+        form.sign-in-form
+          h2 Salutations!
+          .form-group
+            label Email Address
+            input.form-control(type='email' placeholder='bob@aol.com')
+          .form-group
+            label Password
+            input.form-control(type='password' placeholder='password1')
+          .form-group
+            button.btn.btn-default(type='submit' id='loginExistingUser') Submit
+            button.btn.btn-default(type='submit' id='cancelSignin') Cancel
+
+    //- profile form
+    .row
+      .col-md-4.col-md-offset-4
+        form.profile-form
+          h2 Inform the Nerd Tree
+          .form-group
+            label Name
+            input.form-control(type='text' placeholder='Bob')
+          .form-group
+            label Picture URL
+            input.form-control(type='http' placeholder='http://imgur.com/bob')
+          h3 Which of each of the following do you prefer? 
+          .form-group
+            h4 Computer Type
+            .checkbox
+              <label><input type='checkbox'> Mac </label>
+              <label><input type='checkbox'> Windows </label>
+          .form-group
+            h4 Text Editor
+            .checkbox
+              <label><input type='checkbox'> sublime </label>
+              <label><input type='checkbox'> vim </label>
+              <label><input type='checkbox'> atom </label>
+          .form-group
+            h4 Front-End Technology
+            .checkbox
+              <label><input type='checkbox'> html </label>
+              <label><input type='checkbox'> css </label>
+              <label><input type='checkbox'> javascript </label>
+          button.btn.btn-default(type='submit' id='submitProfile')          
+    <!-- --END FORMS-- -->
+
+    //- load profile here
+    #profileTarget
+      
     script(type='text/javascript' src='vendor/jquery.js')
     script(type='text/javascript' src='vendor/lodash.min.js')
     script(type='text/javascript' src='vendor/firebase.js')
-    script(type='text/javascript' src='vendor/main.js')
+    script(type='text/javascript' src='js/main.js')

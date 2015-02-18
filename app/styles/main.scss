@@ -1,5 +1,12 @@
 @import url(http://fonts.googleapis.com/css?family=Alex+Brush);
 
+.sign-up-form {
+  border: 2px solid white;
+  margin: 1%;
+  text-align: center;
+  color: white;
+}
+
 ///////////////////////////////////////////////////////////////
 ///////////////// brand //////////////////////////////////////
 //////////////////////////////////////////////////////////////
@@ -9,20 +16,24 @@
   font-size: 20rem;
   text-align: center;
   color: white;
+  margin: 1%;
 }
 
-
-
-
-
-
-
-
+.navbar-text {
+  font-family: 'Alex Brush', cursive;
+  font-size: 2rem;
+}
 
 /////////////////////////////////////////////////////////////
 //////////////////// html elements /////////////////////////
 ///////////////////////////////////////////////////////////
 
+form {
+  border: 2px solid white;
+  color: white;
+  text-align: center;
+  margin: 1%;
+}
 
 img {
   max-width: 100%;
