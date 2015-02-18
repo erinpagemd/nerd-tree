@@ -35,22 +35,22 @@ html
     .row
       .col-md-4.col-md-offset-4
         form.sign-up-form
-          h2 You have found your nerd tree
+          h2 Find your nerd tree
           .form-group
             label Email Address
-            input.form-control(type='email' placeholder='bob@aol.com')
+            input.form-control(id='signupEmail' type='email' placeholder='bob@aol.com')
           .form-group
             label Password
-            input.form-control(type='password' placeholder='password1')
+            input.form-control(id='signupPassword' type='password' placeholder='password1')
           .form-group
-            button.btn.btn-default(type='submit' id='createNewUser') Submit
-            button.btn.btn-default(type='submit' id='cancelSignup') Cancel
+            button.btn.btn-default(type='submit' id='createNewUser') Sign Up
+            button.btn.btn-default(id='cancelSignup') Cancel
     
     //- signin form
     .row
       .col-md-4.col-md-offset-4
         form.sign-in-form
-          h2 Salutations!
+          h2 Welcome Back!
           .form-group
             label Email Address
             input.form-control(type='email' placeholder='bob@aol.com')
@@ -59,7 +59,7 @@ html
             input.form-control(type='password' placeholder='password1')
           .form-group
             button.btn.btn-default(type='submit' id='loginExistingUser') Submit
-            button.btn.btn-default(type='submit' id='cancelSignin') Cancel
+            button.btn.btn-default(id='cancelSignin') Cancel
 
     //- profile form
     .row
@@ -72,25 +72,10 @@ html
           .form-group
             label Picture URL
             input.form-control(type='http' placeholder='http://imgur.com/bob')
-          h3 Which of each of the following do you prefer? 
           .form-group
-            h4 Computer Type
-            .checkbox
-              <label><input type='checkbox'> Mac </label>
-              <label><input type='checkbox'> Windows </label>
-          .form-group
-            h4 Text Editor
-            .checkbox
-              <label><input type='checkbox'> sublime </label>
-              <label><input type='checkbox'> vim </label>
-              <label><input type='checkbox'> atom </label>
-          .form-group
-            h4 Front-End Technology
-            .checkbox
-              <label><input type='checkbox'> html </label>
-              <label><input type='checkbox'> css </label>
-              <label><input type='checkbox'> javascript </label>
-          button.btn.btn-default(type='submit' id='submitProfile')          
+            button.btn.btn-default(type='submit' id='submitProfile') Submit         
+            button.btn.btn-default(type='submit' id='cancelProfile') Cancel         
+
     <!-- --END FORMS-- -->
 
     //- load profile here
