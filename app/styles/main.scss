@@ -1,5 +1,27 @@
 @import url(http://fonts.googleapis.com/css?family=Alex+Brush);
 
+.allUsersDiv {
+  border: 2px solid red;
+  padding: 3%;
+  text-align: center;
+  margin: 3%;
+}
+
+.userDiv {
+  display: inline-block;
+  border: 2px solid black;
+  margin: 2%;
+  padding: 2%;
+  background-color: white;
+  color: #196773;
+}
+
+.userDiv img {
+  width: auto;
+  height: 100px;
+  max-width: 120px;
+}
+
 .profile-div {
   text-align: center;
 }
@@ -53,7 +75,7 @@ img {
 }
 
 body {
-  background: linear-gradient(to top, #196773, #659096 100%);
+  background: linear-gradient(to top, #196773, #659096 80%);
   background-attachment: fixed;
 }
 

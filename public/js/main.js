@@ -77,11 +77,44 @@ function initialize () {
   //edit click events will have to happen on profileTarget
   $('#profileTarget').on('click', '#editProfile', editProfile);
 
+  //allUsersTarget events
+  $('#getAllUsers').click(getAllUsers);
+
 }//end of initialize
 
 ////////////////////////////////////////////////////
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
+
+//get all the users from firebase
+function getAllUsers (event) {
+  event.preventDefault();
+  fb.child('/users').once('value', function(snapshot) {
+    var snap = snapshot.val();
+    var keys = Object.keys(snap);
+    console.log(keys);
+    createAllUsersDiv(snap);
+  });
+}
+
+function createAllUsersDiv (users) {
+  var $allUsersDiv = $('<div class="allUsersDiv"><h3>Ooooh... look at that! Well... go ahead and get to judging all of these people. Simply click the button on the profile of the people you would like to meet!</h3></div>');
+
+  $.each(users, function(uid) {
+    //make a user div
+    var $userDiv = $('<div class="userDiv"></div>');
+    //make and append the image
+    var $userPhoto = $('<img src="' + users[uid].data.image + '" class="img-circle">');
+    //make and append the name
+    var $userName = $('<h3>' + users[uid].data.name + '</h3>');
+    var $likeButton = $('<button class="btn btn-warning" id="likeUser">I like THIS person!</button>')
+    $userDiv.append($userPhoto, $userName, $likeButton);
+    //append all of that to the allUsersDiv
+    $allUsersDiv.append($userDiv);
+  });
+  //append the allUsersDiv to allUsersTarget
+  $('#allUsersTarget').append($allUsersDiv);
+}
 
 //edit the name of the user in firebase
 function editProfile (event) {
