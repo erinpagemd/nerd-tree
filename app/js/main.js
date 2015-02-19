@@ -7,6 +7,7 @@
 var FIREBASE_URL = 'https://nerd-tree.firebaseio.com',
     fb = new Firebase(FIREBASE_URL),
     usersFbUrl,
+    fbUsers,
     fbUsersData;
 
 $(document).ready(initialize);
@@ -110,6 +111,7 @@ function submitProfile (event) {
   $('#imgUrl').val('');
 
   //save the data to firebase using set()
+  fbUsers = new Firebase(FIREBASE_URL + '/users/' + fb.getAuth().uid);
   fbUsersData = fbUsers.child('data');
   fbUsersData.set(profileObj);
 
@@ -198,8 +200,22 @@ function createNewUser (event) {
     } else {
       console.log("Successfully created user account with uid: ", userData.uid);
       //login
+      fb.authWithPassword(loginObj, function(error, authData) {
+        if(error) {
+          console.log("login failed! ", error);
+          alert("login failed! ", error);
+        } else {
+          console.log('authenticated successfully with payload: ', authData);
+          //hide the signup form
+          $('.sign-up-form').toggle();
+          //show the profile form
+          $('.profile-form').toggle();
+        }
+      });
     }
   });
+
+
 }//end createNewUser
 
 //show sign in form and hide the brand-land
