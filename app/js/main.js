@@ -8,8 +8,8 @@ var FIREBASE_URL = 'https://nerd-tree.firebaseio.com',
     fb = new Firebase(FIREBASE_URL),
     usersFbUrl,
     fbUsers,
-    fbUsersData;
-    likes = [];
+    fbUsersData,
+    newFbLikedUserKey;
 
 $(document).ready(initialize);
 function initialize () {
@@ -33,6 +33,8 @@ function initialize () {
     $('.brand-land').hide();
     //hide profile form
     $('.profile-form').hide();
+
+    ////////////// when logged in, the unlike button shows instead of the like button based on what is on firebase
 
     fbUsers = new Firebase(FIREBASE_URL + '/users/' + fb.getAuth().uid);
 
@@ -81,6 +83,7 @@ function initialize () {
   //allUsersTarget events
   $('#getAllUsers').click(getAllUsers);
   $('#allUsersTarget').on('click', '.likeUser', likeUser);
+  $('#allUsersTarget').on('click', '.unlikeUser', unlikeUser);
 
 
 }//end of initialize
@@ -95,21 +98,37 @@ function likeUser (event) {
   //use event.target to get the uid, grab the data attribute
   //get the closest divs data-user attr
   var $divToLike = $(event.target).parent();
-  var uuid = $divToLike.data('user');
-  //push the uid to a likes array
-  likes.push(uuid);
-  console.log(likes);
+  var likedUser = $divToLike.data('user');
   //hides the like button
   $(event.target).toggle();
   //shows the unlike button
   $(event.target).siblings('.unlikeUser').toggle();
   //save the likes array to firebase
   var fbUsersDataLikes = fbUsersData.child('likes');
-  fbUsersDataLikes.set(likes);
+  var newfbLikedUser = fbUsersDataLikes.push(likedUser);
+  newFbLikedUserKey = newfbLikedUser.key();
 }
 
 //unlike button removes from array
-function unlikeUser () {}
+function unlikeUser (event) {
+  event.preventDefault();
+  //use event.target to get the uid, grab the data attribute
+  //get the closest divs data-user attr
+  var $divToUnlike = $(event.target).parent();
+  var likedUser = $divToUnlike.data('user');
+  //hides the unlike button
+  $(event.target).toggle();
+  //shows the like button
+  $(event.target).siblings('.likeUser').toggle();
+  //remove the unliked person from the likes data
+  var fbUsersDataLikes = fbUsersData.child('likes');
+  var fbLikesUuid = fbUsersDataLikes.child('newFbLikedUserKey');
+  // console.log(fbLikesUuid);
+  fbLikesUuid.remove();
+  console.log(fbLikesUuid);
+  //newFbLikedUserKey.remove();
+
+}
 
 //get all the users from firebase
 function getAllUsers (event) {
