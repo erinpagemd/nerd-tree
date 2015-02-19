@@ -153,6 +153,25 @@ function createProfileDiv () {
 //login an existing user
 function loginExistingUser (event) {
   event.preventDefault();
+
+  fb.authWithPassword(getSigninFormObj(event), function(error, authData) {
+    if(error) {
+      console.log("login failed! ", error);
+      alert("login failed! ", error);
+    } else {
+      fbUsers = new Firebase(FIREBASE_URL + '/users/' + fb.getAuth().uid);
+      //hide the signin form
+      $('.sign-in-form').toggle();
+      //show the profile
+      $('#profileTarget').append(createProfileDiv());
+      console.log('authenticated successfully with payload: ', authData);
+    }
+  });
+}//end loginExistingUser
+
+//get signin form info and create signin obj
+function getSigninFormObj (event) {
+  event.preventDefault();
   //get the email
   var $email = $('#signinEmail').val();
   // and password
@@ -166,16 +185,8 @@ function loginExistingUser (event) {
   $('#signinEmail').val('');
   $('#signinPassword').val('');
 
-
-  fb.authWithPassword(loginObj, function(error, authData) {
-    if(error) {
-      console.log("login failed! ", error);
-      alert("login failed! ", error);
-    } else {
-      console.log('authenticated successfully with payload: ', authData);
-    }
-  });
-}//end loginExistingUser
+  return loginObj;
+}
 
 //create a new firebase user
 function createNewUser (event) {
