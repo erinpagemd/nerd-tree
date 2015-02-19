@@ -9,6 +9,7 @@ var FIREBASE_URL = 'https://nerd-tree.firebaseio.com',
     usersFbUrl,
     fbUsers,
     fbUsersData;
+    likes = [];
 
 $(document).ready(initialize);
 function initialize () {
@@ -79,12 +80,36 @@ function initialize () {
 
   //allUsersTarget events
   $('#getAllUsers').click(getAllUsers);
+  $('#allUsersTarget').on('click', '.likeUser', likeUser);
+
 
 }//end of initialize
 
 ////////////////////////////////////////////////////
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
+
+//like the user when you click the button
+function likeUser (event) {
+  event.preventDefault();
+  //use event.target to get the uid, grab the data attribute
+  //get the closest divs data-user attr
+  var $divToLike = $(event.target).parent();
+  var uuid = $divToLike.data('user');
+  //push the uid to a likes array
+  likes.push(uuid);
+  console.log(likes);
+  //hides the like button
+  $(event.target).toggle();
+  //shows the unlike button
+  $(event.target).siblings('.unlikeUser').toggle();
+
+  //unlike button removes from array
+  //save the likes array to firebase
+  //switch out the button to say unlike this person and have an action to remove from the array
+
+
+}
 
 //get all the users from firebase
 function getAllUsers (event) {
@@ -94,6 +119,7 @@ function getAllUsers (event) {
     var keys = Object.keys(snap);
     console.log(keys);
     createAllUsersDiv(snap);
+    $('.unlikeUser').hide();
   });
 }
 
@@ -107,8 +133,10 @@ function createAllUsersDiv (users) {
     var $userPhoto = $('<img src="' + users[uid].data.image + '" class="img-circle">');
     //make and append the name
     var $userName = $('<h3>' + users[uid].data.name + '</h3>');
-    var $likeButton = $('<button class="btn btn-warning" id="likeUser">I like THIS person!</button>')
-    $userDiv.append($userPhoto, $userName, $likeButton);
+    var $likeButton = $('<button class="btn btn-warning likeUser">I like THIS person!</button>');
+    var $unlikeButton = $('<button class="btn btn-danger unlikeUser">I no NOT like THIS person!</button>');
+    $userDiv.append($userPhoto, $userName, $likeButton, $unlikeButton);
+    $userDiv.attr('data-user', uid);
     //append all of that to the allUsersDiv
     $allUsersDiv.append($userDiv);
   });
