@@ -103,10 +103,9 @@ function likeUser (event) {
   $(event.target).toggle();
   //shows the unlike button
   $(event.target).siblings('.unlikeUser').toggle();
-
   //save the likes array to firebase
-
-
+  var fbUsersDataLikes = fbUsersData.child('likes');
+  fbUsersDataLikes.set(likes);
 }
 
 //unlike button removes from array
