@@ -29,10 +29,14 @@ function initialize () {
     $('#signIn').hide();
     //hide brand-land
     $('.brand-land').hide();
+    //hide profile form
+    $('.profile-form').hide();
 
-    fbUsers = new Firebase('https://nerd-tree.firebaseio.com/users/' + fb.getAuth().uid);
+    fbUsers = new Firebase(FIREBASE_URL + '/users/' + fb.getAuth().uid);
 
     console.log(fb.getAuth().uid);
+
+    displayProfileDiv();
 
   } else {
     //hide these things
@@ -62,11 +66,22 @@ function initialize () {
 
   //profile form
   $('#submitProfile').click(submitProfile);
+  $('#cancelProfile').click(cancelProfile);
 }//end of initialize
 
 ////////////////////////////////////////////////////
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
+
+//cancel profile button hides the profile page
+function cancelProfile (event) {
+  event.preventDefault();
+  fbUsersData = fbUsers.child('data');
+  //hide the profile form
+  $('.profile-form').toggle();
+  //display the name and photo
+  $('#profileTarget').append(createProfileDiv());
+}
 
 //submit profile name and picture url
 function submitProfile (event) {
@@ -81,15 +96,51 @@ function submitProfile (event) {
     name: $name,
     image: $imgUrl
   }
-  //profileObj = JSON.stringify(profileObj);
   //clear the values of the inputs
   $('#profileName').val('');
   $('#imgUrl').val('');
 
   //save the data to firebase using set()
-  var fbUsersData = fbUsers.child('data');
+  fbUsersData = fbUsers.child('data');
   fbUsersData.set(profileObj);
+
+  //hide the profile form
+  $('.profile-form').toggle();
+
+  displayProfileDiv();
 }
+
+//display the name and photo
+function displayProfileDiv () {
+  $('#profileTarget').append(createProfileDiv());
+}
+
+//create dynamic html div container for profile
+function createProfileDiv () {
+  //get the data, and then do all this div stuff inside that callback
+  fbUsersData = fbUsers.child('data');
+  fbUsersData.once('value', function(snapshot) {
+    var snap = snapshot.val();
+
+    console.log('snapshot.image: ' + snap.image);
+    console.log('snapshot.name: ' + snap.key);
+    //container for profile
+    var $profileDiv = $('<div><h3>My Profile</h3></div>');
+    //image src is the profile image
+    var $img = $('<img src="' + snap.image + '">');
+    //heading with profile name as the text
+    var $h2 = $('<h2>' + snap.name + '</h2>');
+
+    //append the h2 and img to the container
+    $profileDiv.append($img);
+    $profileDiv.append($h2);
+    //if it has a unique identifier, grab it here???
+
+    //put the container on the page
+    $('#profileTarget').append($profileDiv);
+
+  });
+}//end createProfileDiv
 
 //login an existing user
 function loginExistingUser (event) {
@@ -116,7 +167,7 @@ function loginExistingUser (event) {
       console.log('authenticated successfully with payload: ', authData);
     }
   });
-}
+}//end loginExistingUser
 
 //create a new firebase user
 function createNewUser (event) {
