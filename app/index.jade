@@ -65,16 +65,18 @@ html
     .row
       .col-md-4.col-md-offset-4
         form.profile-form
-          h2 Inform the Nerd Tree
           .form-group
-            label Name
+            h2 Inform the Nerd Tree
+            <p>Have a monicker you go by? Put that down... Oh, and when you update, update your name AND photo url together. Because that is how this thing is built...
+          .form-group
+            label Profile Name
             input.form-control(id='profileName' type='text' placeholder='Bob')
           .form-group
             label Picture URL
             input.form-control(id='imgUrl' type='url' placeholder='http://imgur.com/bob')
           .form-group
             button.btn.btn-default(type='submit' id='submitProfile') Submit         
-            button.btn.btn-default(id='cancelProfile') Cancel         
+            button.btn.btn-warning(id='cancelProfile') Cancel         
 
     <!-- --END FORMS-- -->
 

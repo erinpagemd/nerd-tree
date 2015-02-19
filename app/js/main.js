@@ -70,11 +70,23 @@ function initialize () {
   //profile form
   $('#submitProfile').click(submitProfile);
   $('#cancelProfile').click(cancelProfile);
+
+  //edit click events will have to happen on profileTarget
+  $('#profileTarget').on('click', '#editProfile', editProfile);
+
 }//end of initialize
 
 ////////////////////////////////////////////////////
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
+
+//edit the name of the user in firebase
+function editProfile (event) {
+  event.preventDefault();
+  //empty the profile and show the profile form
+  $('#profileTarget').empty();
+  $('.profile-form').toggle();
+}
 
 //logout the user
 function logoutUser (event) {
@@ -138,10 +150,13 @@ function createProfileDiv () {
     var $img = $('<img src="' + snap.image + '" class="img-circle">');
     //heading with profile name as the text
     var $h2 = $('<h2>' + snap.name + '</h2>');
+    //create edit buttons
+    var $buttonDiv = $('<button class="btn btn-default" id="editProfile" >Edit Profile</button>');
 
     //append the h2 and img to the container
     $profileDiv.append($img);
     $profileDiv.append($h2);
+    $profileDiv.append($buttonDiv);
     //if it has a unique identifier, grab it here???
 
     //put the container on the page
