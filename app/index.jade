@@ -69,10 +69,10 @@ html
             h2 Inform the Nerd Tree
             <p>Have a monicker you go by? Put that down... Oh, and when you update, update your name AND photo url together. Because that is how this thing is built...
           .form-group
-            label Profile Name
+            label Tell us your name
             input.form-control(id='profileName' type='text' placeholder='Bob')
           .form-group
-            label Picture URL
+            label And let us see you! Enter a Picture URL
             input.form-control(id='imgUrl' type='url' placeholder='http://imgur.com/bob')
           .form-group
             button.btn.btn-default(type='submit' id='submitProfile') Submit         
@@ -85,6 +85,9 @@ html
       .col-md-6 <!-- users pic and name -->
         #profileTarget
       .col-md-6 <!-- other users pic and name??? -->
+        #allUsersTarget
+          button.btn.btn-default(id='getAllUsers') Find Potential Matches
+        #matchedUsersTarget
       
     script(type='text/javascript' src='vendor/jquery.js')
     script(type='text/javascript' src='vendor/lodash.min.js')

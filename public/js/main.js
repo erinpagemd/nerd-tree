@@ -47,6 +47,9 @@ function initialize () {
     $('.sign-in-form').hide();
     //profile form
     $('.profile-form').hide();
+    //hide allUsersTarget
+    $('#allUsersTarget').hide();
+
   }
 
   ////////////////////////////////////////////////////
@@ -103,6 +106,10 @@ function cancelProfile (event) {
   $('.profile-form').toggle();
   //display the name and photo
   $('#profileTarget').append(createProfileDiv());
+  //clear the values of the inputs
+  $('#profileName').val('');
+  $('#imgUrl').val('');
+
 }
 
 //submit profile name and picture url
@@ -177,8 +184,15 @@ function loginExistingUser (event) {
       fbUsers = new Firebase(FIREBASE_URL + '/users/' + fb.getAuth().uid);
       //hide the signin form
       $('.sign-in-form').toggle();
+      //hide the signup button
+      $('#signUp').hide();
+      //hide the signin button
+      $('#signIn').hide();
       //show the profile
       $('#profileTarget').append(createProfileDiv());
+      //show allUsersTarget button
+      $('#allUsersTarget').toggle();
+
       console.log('authenticated successfully with payload: ', authData);
     }
   });
@@ -236,6 +250,12 @@ function createNewUser (event) {
           $('.sign-up-form').toggle();
           //show the profile form
           $('.profile-form').toggle();
+          //show allUsersTarget button
+          $('#allUsersTarget').toggle();
+          //hide the signup button
+          $('#signUp').hide();
+          //hide the signin button
+          $('#signIn').hide();
         }
       });
     }
