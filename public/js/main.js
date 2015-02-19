@@ -56,6 +56,8 @@ function initialize () {
   $('#signIn').click(showSignInForm);
   //signUp button on navbar
   $('#signUp').click(showSignUpForm);
+  //loogout on navbar
+  $('#logout').click(logoutUser);
 
   // //signUp form
   $('#createNewUser').click(createNewUser);
@@ -72,6 +74,13 @@ function initialize () {
 ////////////////////////////////////////////////////
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
+
+//logout the user
+function logoutUser (event) {
+  event.preventDefault();
+  fb.unauth();
+  location.reload(true);
+}//end logoutUser
 
 //cancel profile button hides the profile page
 function cancelProfile (event) {
@@ -121,13 +130,10 @@ function createProfileDiv () {
   fbUsersData = fbUsers.child('data');
   fbUsersData.once('value', function(snapshot) {
     var snap = snapshot.val();
-
-    console.log('snapshot.image: ' + snap.image);
-    console.log('snapshot.name: ' + snap.key);
     //container for profile
-    var $profileDiv = $('<div><h3>My Profile</h3></div>');
+    var $profileDiv = $('<div class="col-md-6 col-md-offset-3 profile-div"><h3>My Profile</h3></div>');
     //image src is the profile image
-    var $img = $('<img src="' + snap.image + '">');
+    var $img = $('<img src="' + snap.image + '" class="img-circle">');
     //heading with profile name as the text
     var $h2 = $('<h2>' + snap.name + '</h2>');
 
