@@ -166,9 +166,6 @@ function getAllUsers () {
     var keys = Object.keys(snap);
     createAllUsersDiv(snap);
     $('.unlikeUser').hide();
-<<<<<<< HEAD
-    $('.emailMe').hide();
-=======
     //hide email me button
     $('.emailMe').hide();
 
