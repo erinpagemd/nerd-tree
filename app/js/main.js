@@ -169,10 +169,8 @@ function getAllUsers () {
     //hide email me button
     $('.emailMe').hide();
 
-
     //for each user, look at my likes and see if they are a match
     checkIfMatch(snap);
-
   });
 }//end getAllUsers
 
@@ -186,27 +184,28 @@ function checkIfMatch (usersData) {
     var myLikes = snapshot.val();
     //filter my likes for their simpleLogin id
     _.forEach(usersData, function(n, key){
-      console.log('forEach: ' + n + ' ' + key);
       var myLike = _.includes(myLikes, key);
       if (myLike) {
         //find the userDiv with the datauuid of key
-        var $userDivKey = $('[data-user="' + key + '"]');
-        var $udLikeButton = $userDivKey.children('.likeUser');
-        $udLikeButton.click();
+        var $userDivKey = $('[data-user="' + key + '"]'),
+            $udLikeButton = $userDivKey.children('.likeUser'),
+            $udUnlikeButton = $userDivKey.children('.unlikeUser'),
+            $udEmailButton = $userDivKey.children('.emailMe'),
+            theirLikes = n.data.likes,
+            minePlusTheirs = _.includes(theirLikes, mySimpleLoginId);
+        $udLikeButton.toggle();
+        $udUnlikeButton.toggle();
+
+        if (minePlusTheirs) {
+          $udEmailButton.toggle();
+          $udUnlikeButton.toggle();
+          $userDivKey.css('background-color', 'green');
+          $userDivKey.css('color', 'white');
+
+        }
       }
-    });
-
-
-    console.log('myLikes: ' + usersData);
-    // if (match) {
-
-    //   make it look like i clicked the like button
-    //   check and see if i am on their like list
-    //   console.log(usersData.keys)
-      // $(event.target).parent().css('background-color', 'green');
-      // $(event.target).parent().css('color', 'white');
-    });
-
+    });//end forEach
+  });//end once
 }//end checkIfMatch
 
 function createAllUsersDiv (users) {
