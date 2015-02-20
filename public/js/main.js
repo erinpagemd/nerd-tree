@@ -151,12 +151,23 @@ function unlikeUser (event) {
   $(event.target).toggle();
   //shows the like button
   $(event.target).siblings('.likeUser').toggle();
-  //remove the unliked person from the likes data
-  var fbUsersDataLikes = fbUsersData.child('likes');
-  var fbLikesUuid = fbUsersDataLikes.child('newFbLikedUserKey');
-  fbLikesUuid.remove();
-  //newFbLikedUserKey.remove();
 
+  //get the uuid of the likedUser
+  //remove the unliked person from the likes data
+  var fbMyLikes = fbUsersData.child('likes');
+  fbMyLikes.once('value', function (snapshot) {
+    var snap = snapshot.val();
+    var uuidToRemove = _.forIn(snap, function(value, key) {
+      if (value === likedUser) {
+        console.log(key);
+        var fbUnlikeUuid = fbMyLikes.child(key);
+        console.log(fbUnlikeUuid);
+        fbUnlikeUuid.remove();
+      }
+    });
+
+  });
+  //fbLikesUuid.remove();
 }// REMOVE IS NOT WORKING!!!!!!
 
 //get all the users from firebase
