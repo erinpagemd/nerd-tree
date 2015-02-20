@@ -173,7 +173,6 @@ function getAllUsers () {
     //for each user, look at my likes and see if they are a match
     checkIfMatch(snap);
 
->>>>>>> master
   });
 }//end getAllUsers
 
