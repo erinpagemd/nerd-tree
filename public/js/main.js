@@ -82,9 +82,9 @@ function initialize () {
   $('#profileTarget').on('click', '#editProfile', editProfile);
 
   //allUsersTarget events
-  // $('#getAllUsers').click(getAllUsers);
   $('#allUsersTarget').on('click', '.likeUser', likeUser);
   $('#allUsersTarget').on('click', '.unlikeUser', unlikeUser);
+  $('#allUsersTarget').on('click', '.emailMe', emailMe);
 
 }//end of initialize
 
@@ -92,25 +92,28 @@ function initialize () {
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
 
+//when you click the email me button
+function emailMe (event) {
+  event.preventDefault();
+  alert('COMING SOON!!');
+}//end of emailMe
+
 //show the matches
 function showMatch (event, liked) {
   //when i like the user check their liked Users and see if I am in it
   //get my simpleLogin id
   var mySimpleLoginId = fb.getAuth().uid;
-  console.log(mySimpleLoginId);
   //filter their likes for my simpleLogin id
   //get their likes
   var fbUserLikes = new Firebase('https://nerd-tree.firebaseio.com/users/' + liked + '/data/likes');
-  console.log('likes: ' + fbUserLikes);
   fbUserLikes.once('value', function(snapshot){
     var snap = snapshot.val();
-    console.log(snap);
     var match = _.includes(snap, mySimpleLoginId);
-    console.log(match);
     if (match) {
-      console.log($(event.target).parent());
       $(event.target).parent().css('background-color', 'green');
       $(event.target).parent().css('color', 'white');
+      //$('.emailMe').toggle();
+      $(event.target).siblings('button').toggle();
     }
 
   });
@@ -156,9 +159,7 @@ function unlikeUser (event) {
   //remove the unliked person from the likes data
   var fbUsersDataLikes = fbUsersData.child('likes');
   var fbLikesUuid = fbUsersDataLikes.child('newFbLikedUserKey');
-  // console.log(fbLikesUuid);
   fbLikesUuid.remove();
-  console.log(fbLikesUuid);
   //newFbLikedUserKey.remove();
 
 }// REMOVE IS NOT WORKING!!!!!!
@@ -168,14 +169,14 @@ function getAllUsers () {
   fb.child('/users').once('value', function(snapshot) {
     var snap = snapshot.val();
     var keys = Object.keys(snap);
-    console.log(keys);
     createAllUsersDiv(snap);
     $('.unlikeUser').hide();
+    $('.emailMe').hide();
   });
 }
 
 function createAllUsersDiv (users) {
-  var $allUsersDiv = $('<div class="allUsersDiv"><h3>Ooooh... look at that! Well... go ahead and get to judging all of these people. Simply click the button on the profile of the people you would like to meet!</h3></div>');
+  var $allUsersDiv = $('<div class="allUsersDiv"><h3>Ooooh... look at that! Well... go ahead and get to judging all of these people. Simply click the button on the profile of the person (or persons... am I right?) you would like to meet!</h3></div>');
 
   $.each(users, function(uid) {
     //make a user div
@@ -185,8 +186,9 @@ function createAllUsersDiv (users) {
     //make and append the name
     var $userName = $('<h3>' + users[uid].data.name + '</h3>');
     var $likeButton = $('<button class="btn btn-warning likeUser">I like THIS person!</button>');
-    var $unlikeButton = $('<button class="btn btn-danger unlikeUser">I no NOT like THIS person!</button>');
-    $userDiv.append($userPhoto, $userName, $likeButton, $unlikeButton);
+    var $unlikeButton = $('<button class="btn btn-danger unlikeUser">Remove from my likes list!!</button>');
+    var $emailMeButton = $('<button class="btn btn-default emailMe">Email Me</button>');
+    $userDiv.append($userPhoto, $userName, $likeButton, $unlikeButton, $emailMeButton);
     $userDiv.attr('data-user', uid);
     //append all of that to the allUsersDiv
     $allUsersDiv.append($userDiv);
@@ -227,35 +229,41 @@ function cancelProfile (event) {
 //submit profile name and picture url
 function submitProfile (event) {
   event.preventDefault();
+
+  //save the data to firebase using set()
+  fbUsers = new Firebase(FIREBASE_URL + '/users/' + fb.getAuth().uid);
+  fbUsersData = fbUsers.child('data');
+  fbUsersData.set(createProfileObj(event));
+
+  //hide the profile form
+  $('.profile-form').toggle();
+
+  displayProfileDiv();
+}// end submitProfile
+
+//display the name and photo
+function displayProfileDiv () {
+  $('#profileTarget').append(createProfileDiv());
+}//end displayProfileDiv
+
+//create a login obj for profile
+function createProfileObj (event) {
+  event.preventDefault();
   //get the name
   var $name = $('#profileName').val();
   // and password
   var $imgUrl = $('#imgUrl').val();
-  console.log($imgUrl);
   //create the login object
   var profileObj = {
     name: $name,
     image: $imgUrl
   }
   //clear the values of the inputs
-  $('#profileName').val('');
-  $('#imgUrl').val('');
+  $('input').val('');
 
-  //save the data to firebase using set()
-  fbUsers = new Firebase(FIREBASE_URL + '/users/' + fb.getAuth().uid);
-  fbUsersData = fbUsers.child('data');
-  fbUsersData.set(profileObj);
+  return profileObj;
 
-  //hide the profile form
-  $('.profile-form').toggle();
-
-  displayProfileDiv();
-}
-
-//display the name and photo
-function displayProfileDiv () {
-  $('#profileTarget').append(createProfileDiv());
-}
+}//end createProfileObj
 
 //create dynamic html div container for profile
 function createProfileDiv () {
@@ -273,9 +281,7 @@ function createProfileDiv () {
     var $buttonDiv = $('<button class="btn btn-default" id="editProfile" >Edit Profile</button>');
 
     //append the h2 and img to the container
-    $profileDiv.append($img);
-    $profileDiv.append($h2);
-    $profileDiv.append($buttonDiv);
+    $profileDiv.append($img, $h2, $buttonDiv);
     //if it has a unique identifier, grab it here???
 
     //put the container on the page
@@ -325,11 +331,10 @@ function getSigninFormObj (event) {
     password: $password
   }
   //clear the values of the inputs
-  $('#signinEmail').val('');
-  $('#signinPassword').val('');
+  $('input').val('');
 
   return loginObj;
-}
+}//end getSigninFormObj
 
 //create a new firebase user
 function createNewUser (event) {
