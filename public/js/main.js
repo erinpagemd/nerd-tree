@@ -34,11 +34,14 @@ function initialize () {
     //hide profile form
     $('.profile-form').hide();
 
+    ////////////// when logged in, the unlike button shows instead of the like button based on what is on firebase
+
     fbUsers = new Firebase(FIREBASE_URL + '/users/' + fb.getAuth().uid);
 
-    console.log(fb.getAuth().uid);
-
     displayProfileDiv();
+
+    getAllUsers();
+
 
   } else {
     //hide these things
@@ -79,16 +82,45 @@ function initialize () {
   $('#profileTarget').on('click', '#editProfile', editProfile);
 
   //allUsersTarget events
-  $('#getAllUsers').click(getAllUsers);
+  // $('#getAllUsers').click(getAllUsers);
   $('#allUsersTarget').on('click', '.likeUser', likeUser);
   $('#allUsersTarget').on('click', '.unlikeUser', unlikeUser);
-
 
 }//end of initialize
 
 ////////////////////////////////////////////////////
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
+
+//show the matches
+function showMatch (event, liked) {
+  //when i like the user check their liked Users and see if I am in it
+  //get my simpleLogin id
+  var mySimpleLoginId = fb.getAuth().uid;
+  console.log(mySimpleLoginId);
+  //filter their likes for my simpleLogin id
+  //get their likes
+  var fbUserLikes = new Firebase('https://nerd-tree.firebaseio.com/users/' + liked + '/data/likes');
+  console.log('likes: ' + fbUserLikes);
+  fbUserLikes.once('value', function(snapshot){
+    var snap = snapshot.val();
+    console.log(snap);
+    var match = _.includes(snap, mySimpleLoginId);
+    console.log(match);
+    if (match) {
+      console.log($(event.target).parent());
+      $(event.target).parent().css('background-color', 'green');
+      $(event.target).parent().css('color', 'white');
+    }
+
+  });
+
+  //if true...
+  //if it is a match, change the color of the background of the div to green
+  //filter the green ones to the top
+  //then show the ones i like that are not matches
+  //then show the ones i do not like
+}
 
 //like the user when you click the button
 function likeUser (event) {
@@ -105,8 +137,11 @@ function likeUser (event) {
   var fbUsersDataLikes = fbUsersData.child('likes');
   var newfbLikedUser = fbUsersDataLikes.push(likedUser);
   newFbLikedUserKey = newfbLikedUser.key();
-}
 
+  showMatch(event, likedUser);
+}//end likeUser
+
+//REMOVE IS NOT WORKING!!!!
 //unlike button removes from array
 function unlikeUser (event) {
   event.preventDefault();
@@ -126,11 +161,10 @@ function unlikeUser (event) {
   console.log(fbLikesUuid);
   //newFbLikedUserKey.remove();
 
-}
+}// REMOVE IS NOT WORKING!!!!!!
 
 //get all the users from firebase
-function getAllUsers (event) {
-  event.preventDefault();
+function getAllUsers () {
   fb.child('/users').once('value', function(snapshot) {
     var snap = snapshot.val();
     var keys = Object.keys(snap);
@@ -270,6 +304,8 @@ function loginExistingUser (event) {
       $('#profileTarget').append(createProfileDiv());
       //show allUsersTarget button
       $('#allUsersTarget').toggle();
+
+      getAllUsers();
 
       console.log('authenticated successfully with payload: ', authData);
     }
