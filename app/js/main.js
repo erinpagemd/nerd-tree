@@ -85,6 +85,7 @@ function initialize () {
   // $('#getAllUsers').click(getAllUsers);
   $('#allUsersTarget').on('click', '.likeUser', likeUser);
   $('#allUsersTarget').on('click', '.unlikeUser', unlikeUser);
+  $('#allUsersTarget').on('click', '.emailMe', emailMe);
 
 }//end of initialize
 
@@ -92,35 +93,31 @@ function initialize () {
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
 
+//email a match
+function emailMe (event) {
+  event.preventDefault();
+  alert('Feature coming soon!!');
+}//end emailMe
+
 //show the matches
 function showMatch (event, liked) {
   //when i like the user check their liked Users and see if I am in it
   //get my simpleLogin id
   var mySimpleLoginId = fb.getAuth().uid;
-  console.log(mySimpleLoginId);
-  //filter their likes for my simpleLogin id
   //get their likes
   var fbUserLikes = new Firebase('https://nerd-tree.firebaseio.com/users/' + liked + '/data/likes');
-  console.log('likes: ' + fbUserLikes);
   fbUserLikes.once('value', function(snapshot){
     var snap = snapshot.val();
-    console.log(snap);
+    //filter their likes for my simpleLogin id
     var match = _.includes(snap, mySimpleLoginId);
-    console.log(match);
     if (match) {
-      console.log($(event.target).parent());
       $(event.target).parent().css('background-color', 'green');
       $(event.target).parent().css('color', 'white');
+      $(event.target).siblings('button').toggle();
     }
 
   });
-
-  //if true...
-  //if it is a match, change the color of the background of the div to green
-  //filter the green ones to the top
-  //then show the ones i like that are not matches
-  //then show the ones i do not like
-}
+}//end showMatch
 
 //like the user when you click the button
 function likeUser (event) {
@@ -168,11 +165,50 @@ function getAllUsers () {
   fb.child('/users').once('value', function(snapshot) {
     var snap = snapshot.val();
     var keys = Object.keys(snap);
-    console.log(keys);
     createAllUsersDiv(snap);
     $('.unlikeUser').hide();
+    //hide email me button
+    $('.emailMe').hide();
+
+
+    //for each user, look at my likes and see if they are a match
+    checkIfMatch(snap);
+
   });
-}
+}//end getAllUsers
+
+//check if the users are in my likes list
+function checkIfMatch (usersData) {
+  //get my simpleLogin id
+  var mySimpleLoginId = fb.getAuth().uid;
+  //for each user, look at my likes and see if they are a match
+  var fbMyLikes = new Firebase('https://nerd-tree.firebaseio.com/users/' + mySimpleLoginId + '/data/likes');
+  fbMyLikes.once('value', function(snapshot){
+    var myLikes = snapshot.val();
+    //filter my likes for their simpleLogin id
+    _.forEach(usersData, function(n, key){
+      console.log('forEach: ' + n + ' ' + key);
+      var myLike = _.includes(myLikes, key);
+      if (myLike) {
+        //find the userDiv with the datauuid of key
+        var $userDivKey = $('[data-user="' + key + '"]');
+        var $udLikeButton = $userDivKey.children('.likeUser');
+        $udLikeButton.click();
+      }
+    });
+
+
+    console.log('myLikes: ' + usersData);
+    // if (match) {
+
+    //   make it look like i clicked the like button
+    //   check and see if i am on their like list
+    //   console.log(usersData.keys)
+      // $(event.target).parent().css('background-color', 'green');
+      // $(event.target).parent().css('color', 'white');
+    });
+
+}//end checkIfMatch
 
 function createAllUsersDiv (users) {
   var $allUsersDiv = $('<div class="allUsersDiv"><h3>Ooooh... look at that! Well... go ahead and get to judging all of these people. Simply click the button on the profile of the people you would like to meet!</h3></div>');
@@ -186,7 +222,8 @@ function createAllUsersDiv (users) {
     var $userName = $('<h3>' + users[uid].data.name + '</h3>');
     var $likeButton = $('<button class="btn btn-warning likeUser">I like THIS person!</button>');
     var $unlikeButton = $('<button class="btn btn-danger unlikeUser">I no NOT like THIS person!</button>');
-    $userDiv.append($userPhoto, $userName, $likeButton, $unlikeButton);
+    var $emailMeButton = $('<button class="btn btn-default emailMe">Email Me</button>');
+    $userDiv.append($userPhoto, $userName, $likeButton, $unlikeButton, $emailMeButton);
     $userDiv.attr('data-user', uid);
     //append all of that to the allUsersDiv
     $allUsersDiv.append($userDiv);
@@ -195,11 +232,12 @@ function createAllUsersDiv (users) {
   $('#allUsersTarget').append($allUsersDiv);
 }
 
-//edit the name of the user in firebase
+//show profile form
 function editProfile (event) {
   event.preventDefault();
   //empty the profile and show the profile form
   $('#profileTarget').empty();
+  $('#allUsersTarget').toggle();
   $('.profile-form').toggle();
 }
 
@@ -218,11 +256,13 @@ function cancelProfile (event) {
   $('.profile-form').toggle();
   //display the name and photo
   $('#profileTarget').append(createProfileDiv());
+  //show all the users... might we need to reload the allUsersDiv??
+  $('#allUsersTarget').toggle();
   //clear the values of the inputs
   $('#profileName').val('');
   $('#imgUrl').val('');
 
-}
+}//end cancelProfile
 
 //submit profile name and picture url
 function submitProfile (event) {
