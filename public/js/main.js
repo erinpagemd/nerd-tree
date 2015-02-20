@@ -92,45 +92,28 @@ function initialize () {
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
 
-<<<<<<< HEAD
-//when you click the email me button
-function emailMe (event) {
-  event.preventDefault();
-  alert('COMING SOON!!');
-}//end of emailMe
-=======
 //email a match
 function emailMe (event) {
   event.preventDefault();
   alert('Feature coming soon!!');
 }//end emailMe
->>>>>>> master
 
 //show the matches
 function showMatch (event, liked) {
   //when i like the user check their liked Users and see if I am in it
   //get my simpleLogin id
   var mySimpleLoginId = fb.getAuth().uid;
-<<<<<<< HEAD
-  //filter their likes for my simpleLogin id
-=======
->>>>>>> master
+
   //get their likes
   var fbUserLikes = new Firebase('https://nerd-tree.firebaseio.com/users/' + liked + '/data/likes');
   fbUserLikes.once('value', function(snapshot){
     var snap = snapshot.val();
-<<<<<<< HEAD
-=======
-    //filter their likes for my simpleLogin id
->>>>>>> master
+
     var match = _.includes(snap, mySimpleLoginId);
     if (match) {
       $(event.target).parent().css('background-color', 'green');
       $(event.target).parent().css('color', 'white');
-<<<<<<< HEAD
-      //$('.emailMe').toggle();
-=======
->>>>>>> master
+
       $(event.target).siblings('button').toggle();
     }
 

@@ -92,7 +92,6 @@ function initialize () {
 ///////////////// Functions // /////////////////////
 ///////////////////////////////////////////////////
 
-
 //email a match
 function emailMe (event) {
   event.preventDefault();
