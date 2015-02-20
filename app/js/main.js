@@ -220,11 +220,7 @@ function createAllUsersDiv (users) {
     //make and append the name
     var $userName = $('<h3>' + users[uid].data.name + '</h3>');
     var $likeButton = $('<button class="btn btn-warning likeUser">I like THIS person!</button>');
-<<<<<<< HEAD
-    var $unlikeButton = $('<button class="btn btn-danger unlikeUser">Remove from my likes list!!</button>');
-=======
     var $unlikeButton = $('<button class="btn btn-danger unlikeUser">I no NOT like THIS person!</button>');
->>>>>>> master
     var $emailMeButton = $('<button class="btn btn-default emailMe">Email Me</button>');
     $userDiv.append($userPhoto, $userName, $likeButton, $unlikeButton, $emailMeButton);
     $userDiv.attr('data-user', uid);
