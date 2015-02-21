@@ -255,8 +255,8 @@ function editProfile (event) {
   event.preventDefault();
   //empty the profile and show the profile form
   $('#profileTarget').empty();
-  $('#allUsersTarget').toggle();
   $('.profile-form').toggle();
+  $('#allUsersTarget').toggle();
 }
 
 //logout the user
@@ -293,8 +293,12 @@ function submitProfile (event) {
 
   //hide the profile form
   $('.profile-form').toggle();
+  //show all of the other users
+  //$('#allUsersTarget').toggle();
 
   displayProfileDiv();
+  getAllUsers();
+
 }// end submitProfile
 
 //display the name and photo
@@ -318,7 +322,6 @@ function createProfileObj (event) {
   $('input').val('');
 
   return profileObj;
-
 }//end createProfileObj
 
 //create dynamic html div container for profile
@@ -405,8 +408,7 @@ function createNewUser (event) {
     password: $password
   }
   //clear the values of the inputs
-  $('#signupEmail').val('');
-  $('#signupPassword').val('');
+  $('input').val('');
 
   fb.createUser(loginObj, function (error, userData) {
     if (error) {
@@ -431,12 +433,11 @@ function createNewUser (event) {
           $('#signUp').hide();
           //hide the signin button
           $('#signIn').hide();
-        }
-      });
-    }
-  });
 
-
+        }//end if
+      });//end auth
+    }//end if
+  });//end createUser
 }//end createNewUser
 
 //show sign in form and hide the brand-land
