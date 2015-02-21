@@ -113,7 +113,6 @@ function showMatch (event, liked) {
     if (match) {
       $(event.target).parent().css('background-color', 'green');
       $(event.target).parent().css('color', 'white');
-
       $(event.target).siblings('button').toggle();
     }
 
@@ -124,34 +123,48 @@ function showMatch (event, liked) {
 function likeUser (event) {
   event.preventDefault();
   //use event.target to get the uid, grab the data attribute
-  //get the closest divs data-user attr
-  var $divToLike = $(event.target).parent();
-  var likedUser = $divToLike.data('user');
   //hides the like button
   $(event.target).toggle();
   //shows the unlike button
   $(event.target).siblings('.unlikeUser').toggle();
+
   //save the likes array to firebase
+  saveLikes(likedSimpleLogin(event))
+
+  showMatch(event, likedSimpleLogin(event));
+}//end likeUser
+
+//get the closest divs data-user attr
+function likedSimpleLogin (event) {
+  event.preventDefault();
+  //get the closest divs data-user attr
+  var $divToLike = $(event.target).parent();
+  var likedUser = $divToLike.data('user');
+  return likedUser;
+}//endLikedSimpleLogin
+
+//save the likes array to firebase
+function saveLikes(likedUser) {
   var fbUsersDataLikes = fbUsersData.child('likes');
   var newfbLikedUser = fbUsersDataLikes.push(likedUser);
   newFbLikedUserKey = newfbLikedUser.key();
+  return newFbLikedUserKey
+}//end saveLikes
 
-  showMatch(event, likedUser);
-}//end likeUser
-
-//REMOVE IS NOT WORKING!!!!
 //unlike button removes from array
 function unlikeUser (event) {
   event.preventDefault();
-  //use event.target to get the uid, grab the data attribute
-  //get the closest divs data-user attr
-  var $divToUnlike = $(event.target).parent();
-  var likedUser = $divToUnlike.data('user');
   //hides the unlike button
   $(event.target).toggle();
   //shows the like button
   $(event.target).siblings('.likeUser').toggle();
 
+  removeUnliked(likedSimpleLogin(event));
+
+}// end unlikeUser
+
+//remove the unliked user from my likes list
+function removeUnliked(likedUser) {
   //get the uuid of the likedUser
   //remove the unliked person from the likes data
   var fbMyLikes = fbUsersData.child('likes');
@@ -159,16 +172,12 @@ function unlikeUser (event) {
     var snap = snapshot.val();
     var uuidToRemove = _.forIn(snap, function(value, key) {
       if (value === likedUser) {
-        console.log(key);
         var fbUnlikeUuid = fbMyLikes.child(key);
-        console.log(fbUnlikeUuid);
         fbUnlikeUuid.remove();
-      }
-    });
-
-  });
-  //fbLikesUuid.remove();
-}// REMOVE IS NOT WORKING!!!!!!
+      }//end if
+    });//end forIn
+  });//end once
+}//end removeUnliked
 
 //get all the users from firebase
 function getAllUsers () {
